@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from __future__ import unicode_literals
 
 import suds
@@ -10,7 +8,6 @@ import requests
 from datetime import date, datetime
 
 logger_debug = logging.getLogger('FuelSDKWrapper')
-
 
 class Operator:
 
@@ -28,7 +25,6 @@ class Operator:
 
 
 class ObjectType:
-
     CAMPAIGN = 'ET_Campaign'
     CAMPAIGN_ASSET = 'ET_Campaign_Asset'
     CONTENT_AREA = 'ET_ContentArea'
@@ -254,7 +250,7 @@ class ET_Extract(FuelSDK.rest.ET_Constructor):
         try:
             response = auth_stub.soap_client.service.Extract(ws_extractRequest)
         except suds.TypeNotFound as e:
-            if e.message != "Type not found: 'ExtractResult'":
+            if e != "Type not found: 'ExtractResult'":
                 raise e
 
         if response is not None:
@@ -339,7 +335,7 @@ class ET_API:
             if object_type.startswith('ET_'):
                 self.current_object = getattr(FuelSDK, object_type)()
             else:
-                self.current_object = getattr(FuelSDK, 'ET_{}'.format(object_type))()
+                self.current_object = getattr(FuelSDK, f'ET_{object_type}')()
         except AttributeError:
             if is_rest:
                 self.current_object = globals()['ET_ObjectRest'](object_type)
